@@ -7,13 +7,14 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws IOException {
         //load data into a csv
+        AddressBook addressBook = new AddressBook();
         try(BufferedReader fileReader = new BufferedReader(new FileReader("src/main/resources/input.csv"))) {
             String line = "";
             // read the csv
             while ((line = fileReader.readLine()) != null) {
                 String[] splitStr = line.replaceAll("\"", "").split(",");
                 //get rid of double quotes and split the line on commas
-                StringBuilder sb = new StringBuilder(splitStr[2].replaceAll("\\.", "").toUpperCase().trim()+ ",");
+                StringBuilder sb = new StringBuilder(splitStr[2].replaceAll("\\.", "").replaceAll(",", "").toUpperCase().trim()+ ",");
                 //create a stringbuilder with the first address field to build a standardized address field since inputs are not standardized
 
                 //iterate across remaining address fields, final block is age, ignore it.
@@ -25,11 +26,13 @@ public class Main {
                     }
                 }
                 //create AddressEntry objects
-                System.out.println(sb.toString());
-                System.out.println(Arrays.toString(splitStr));
+//                System.out.println(sb.toString());
+//                System.out.println(Arrays.toString(splitStr));
                 AddressEntry addressEntry = new AddressEntry(splitStr[0], splitStr[1], sb.toString(), splitStr[splitStr.length-1]);
-                System.out.println(addressEntry.toString());
+//                System.out.println(addressEntry.toString());
+                addressBook.addEntry(addressEntry);
             }
+            addressBook.simpleToString();
         }
         catch (IOException e) {
             e.printStackTrace();
