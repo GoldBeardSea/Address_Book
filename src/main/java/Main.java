@@ -6,7 +6,57 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        //load data into a csv
+        AddressBook addressBook = getAddressBook();
+
+        Scanner input = new Scanner(System.in);
+        int kill = 0;
+        int answer, age;
+        do {
+            System.out.println("--------- | Address Book | ---------");
+            System.out.println("Press 1 to print current Address Book, ordered by largest household, and then individual entries over 18 years old");
+            //Add additional personal stretch goals after here
+            System.out.println("Press 2 to print current Address Book, ordered by largest household, and then individual entries over a specific age in years");
+            System.out.println("Press 3 to add an entry to the address book");
+            System.out.println("Press 0 to exit application");
+
+            try {
+                answer = input.nextInt();
+                input.nextLine();
+            } catch (NumberFormatException exception) {
+                exception.printStackTrace();
+                answer = -1;
+                System.out.print("Not a valid selection");
+            }
+            if (answer == 1) {
+                addressBook.printByHouseholdHigh();
+                addressBook.orderedLastFirstAdult();
+            }
+            if (answer == 2) {
+                System.out.println("Enter Age (0-120) to filter entries");
+                age = input.nextInt();
+                addressBook.printByHouseholdHigh();
+                System.out.println("You have entered " + age + " years old");
+                addressBook.orderedLastFirst(age);
+            }
+            if (answer == 3) {
+                System.out.println("Enter First Name");
+                String firstName = input.nextLine();
+                System.out.println("Enter Last Name");
+                String lastName = input.nextLine();
+                System.out.println("Enter Address Format: Street Unit, City, State (Abbreviation)");
+                String address = input.nextLine().toUpperCase();
+                System.out.println("Enter Age");
+                String ageStr = input.nextLine();
+                AddressEntry addressEntry = new AddressEntry(firstName, lastName, address, ageStr);
+                addressBook.addEntry(addressEntry);
+                addressBook.createAndUpdateHousehold(addressEntry);
+            }
+        }while(answer != kill); {
+            System.out.println("Exiting Application...");
+        }
+    }
+
+    private static AddressBook getAddressBook() {
         AddressBook addressBook = new AddressBook();
         try(BufferedReader fileReader = new BufferedReader(new FileReader("src/main/resources/input.csv"))) {
             String line = "";
@@ -38,35 +88,11 @@ public class Main {
                 addressBook.addEntry(addressEntry);
                 addressBook.createAndUpdateHousehold(addressEntry);
             }
-            addressBook.simpleToString();
-            addressBook.printByHouseholdHigh();
+
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-
-        // will work on this later and refactor
-//        Scanner input = new Scanner(System.in);
-//        int kill = 0;
-//        int answer;
-//        do {
-//            System.out.println("-------- Address Book ---------");
-//            System.out.println("Press 1 to print current Address Book");
-//            //Add additional personal stretch goals after here
-//            System.out.println("Press 0 to exit application");
-//
-//            try {
-//                answer = input.nextInt();
-//            } catch (NumberFormatException exception) {
-//                exception.printStackTrace();
-//                answer = -1;
-//                System.out.print("Not a valid selection");
-//            }
-//            if (answer == 1)
-//                AddressBook.printByHouseholdHigh();
-//                AddressBook.printByAdultsLastName();
-//        }while(answer != kill); {
-//            System.out.println("Exiting Application...");
-//        }
+        return addressBook;
     }
 }

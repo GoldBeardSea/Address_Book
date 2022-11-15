@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class AddressBook {
     HashMap<String, Integer> household = new LinkedHashMap<>();
@@ -24,6 +21,35 @@ public class AddressBook {
         for (AddressEntry a : entries) {
             System.out.println(a.toString());
         }
+    }
+
+    public void orderedLastFirstAdult() {
+        extracted();
+        for (AddressEntry a : entries) {
+                if (Integer.valueOf(a.getAge()) >= 18 ) {
+                    System.out.println(a.toString());
+                }
+            }
+    }
+
+    public void orderedLastFirst(int target) {
+        extracted();
+        for (AddressEntry a : entries) {
+                if (Integer.valueOf(a.getAge()) >= target ) {
+                    System.out.println(a.toString());
+                }
+            }
+    }
+
+    private void extracted() {
+        Collections.sort(entries, new Comparator<AddressEntry>() {
+            public int compare(AddressEntry e1, AddressEntry e2) {
+                int r =  e1.getSecondName().compareToIgnoreCase(e2.getSecondName());
+                if (r != 0)
+                    return r;
+                return e1.getFirstName().compareToIgnoreCase(e2.getSecondName());
+            }
+        });
     }
 
     public void printByHouseholdHigh() {
