@@ -27,10 +27,8 @@ public class Main {
                 }
                 //create AddressEntry objects standardize apartment with no comma this is essentially a hack, and would need to be further developed to handle additional usecases and alternative spellings
                 if (sb.toString().contains(", APT")) {
-                    System.out.println(true);
                     for (int i = 0; i < sb.length(); i++) {
                         if (sb.charAt(i) == ',') {
-                            System.out.println("Delete");
                             sb.deleteCharAt(i);
                             break;
                         }
@@ -38,8 +36,10 @@ public class Main {
                 }
                 AddressEntry addressEntry = new AddressEntry(splitStr[0], splitStr[1], sb.toString(), splitStr[splitStr.length-1]);
                 addressBook.addEntry(addressEntry);
+                addressBook.createAndUpdateHousehold(addressEntry);
             }
             addressBook.simpleToString();
+            addressBook.printByHouseholdHigh();
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -63,7 +63,7 @@ public class Main {
 //                System.out.print("Not a valid selection");
 //            }
 //            if (answer == 1)
-//                AddressBook.printByHouseHold();
+//                AddressBook.printByHouseholdHigh();
 //                AddressBook.printByAdultsLastName();
 //        }while(answer != kill); {
 //            System.out.println("Exiting Application...");
