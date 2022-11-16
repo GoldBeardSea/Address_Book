@@ -5,7 +5,9 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        AddressBook addressBook = getAddressBook();
+        AddressBook addressBook = new AddressBook();
+        String filePath = "src/main/resources/input.csv";
+        CSVReader.csvReader(addressBook, filePath);
 
         // bare minim console CLI to control some of the scripts
         Scanner input = new Scanner(System.in);
@@ -17,6 +19,7 @@ public class Main {
             //Add additional personal stretch goals after here
             System.out.println("Press 2 to print current Address Book, ordered by largest household, and then individual entries over a specific age in years");
             System.out.println("Press 3 to add an entry to the address book");
+            System.out.println("Press 4 to add filepath to create addressbook out of a csv");
             System.out.println("Press 0 to exit application");
 
             try {
@@ -27,6 +30,7 @@ public class Main {
                 answer = -1;
                 System.out.print("Not a valid selection");
             }
+            //in time introduce handling logic for user input errors
             if (answer == 1) {
                 addressBook.printByHouseholdHigh();
                 addressBook.orderedLastFirst();
@@ -52,48 +56,19 @@ public class Main {
                 addressBook.createAndUpdateHousehold(addressEntry);
                 System.out.println("You have inserted " + addressEntry.toString() + " into address book");
             }
-        }while(answer != kill); {
+            if (answer == 4) {
+                System.out.println("Enter Filepath for different csv to build address book");
+                String filePathInput = input.nextLine();
+                AddressBook inputBook = new AddressBook();
+                CSVReader.csvReader(inputBook, filePathInput);
+                System.out.println("Enter Target age to filter entries");
+                int ageStr = input.nextInt();
+                inputBook.printByHouseholdHigh();
+                inputBook.orderedLastFirst(ageStr);
+            }
+        } while (answer != kill);
+        {
             System.out.println("Exiting Application...");
         }
-    }
-
-    private static AddressBook getAddressBook() {
-        AddressBook addressBook = new AddressBook();
-        try(BufferedReader fileReader = new BufferedReader(new FileReader("src/main/resources/input.csv"))) {
-            String line = "";
-            // read the csv
-            while ((line = fileReader.readLine()) != null) {
-                String[] splitStr = line.replaceAll("\"", "").replaceAll("\\.", "").split(",");
-                //get rid of double quotes and split the line on commas
-                StringBuilder sb = new StringBuilder(splitStr[2].replaceAll("\\.", "").replaceAll(",", "").toUpperCase().trim()+ ",");
-                //create a stringbuilder with the first address field to build a standardized address since inputs are not standardized
-
-                //iterate across remaining address, final block is age, ignore it.
-                for (int i = 3; i <= splitStr.length-2; i++) {
-                    if (i==splitStr.length-2) {
-                        sb.append(" " + splitStr[i].replaceAll("\\.", "").toUpperCase().trim());
-                    } else {
-                        sb.append(" " + splitStr[i].replaceAll("\\.", "").toUpperCase().trim() + ",");
-                    }
-                }
-                //create AddressEntry objects standardize apartment with no comma this is essentially a hack, and would need to be further developed to handle additional usecases and alternative spellings
-                if (sb.toString().contains(", APT")) {
-                    for (int i = 0; i < sb.length(); i++) {
-                        if (sb.charAt(i) == ',') {
-                            sb.deleteCharAt(i);
-                            break;
-                        }
-                    }
-                }
-                AddressEntry addressEntry = new AddressEntry(splitStr[0], splitStr[1], sb.toString(), splitStr[splitStr.length-1]);
-                addressBook.addEntry(addressEntry);
-                addressBook.createAndUpdateHousehold(addressEntry);
-            }
-
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return addressBook;
     }
 }
