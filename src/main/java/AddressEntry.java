@@ -7,10 +7,11 @@ public class AddressEntry {
     public AddressEntry(String firstName, String secondName, String address, String age) {
         this.firstName = firstName;
         this.secondName = secondName;
-        this.address = address;
+        this.address = address.toUpperCase();
         this.age = age;
     }
 
+    //creating standard get/setters
     public String getFirstName() {
         return firstName;
     }
@@ -32,7 +33,7 @@ public class AddressEntry {
     }
 
     public void setAddress(String address) {
-        this.address = address;
+        this.address = address.toUpperCase();
     }
 
     public String getAge() {
@@ -45,6 +46,6 @@ public class AddressEntry {
 
     @Override
     public String toString() {
-        return String.format("(%s, %s, %s, %s)", getFirstName(), getSecondName(), getAddress(), getAge());
+        return String.format("%s, %s, %s, %s", getFirstName(), getSecondName(), getAddress(), getAge());
     }
 }

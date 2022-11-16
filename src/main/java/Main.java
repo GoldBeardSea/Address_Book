@@ -1,13 +1,13 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         AddressBook addressBook = getAddressBook();
 
+        // bare minim console CLI to control some of the scripts
         Scanner input = new Scanner(System.in);
         int kill = 0;
         int answer, age;
@@ -29,13 +29,13 @@ public class Main {
             }
             if (answer == 1) {
                 addressBook.printByHouseholdHigh();
-                addressBook.orderedLastFirstAdult();
+                addressBook.orderedLastFirst();
             }
             if (answer == 2) {
                 System.out.println("Enter Age (0-120) to filter entries");
                 age = input.nextInt();
-                addressBook.printByHouseholdHigh();
                 System.out.println("You have entered " + age + " years old");
+                addressBook.printByHouseholdHigh();
                 addressBook.orderedLastFirst(age);
             }
             if (answer == 3) {
@@ -50,6 +50,7 @@ public class Main {
                 AddressEntry addressEntry = new AddressEntry(firstName, lastName, address, ageStr);
                 addressBook.addEntry(addressEntry);
                 addressBook.createAndUpdateHousehold(addressEntry);
+                System.out.println("You have inserted " + addressEntry.toString() + " into address book");
             }
         }while(answer != kill); {
             System.out.println("Exiting Application...");
@@ -65,9 +66,9 @@ public class Main {
                 String[] splitStr = line.replaceAll("\"", "").replaceAll("\\.", "").split(",");
                 //get rid of double quotes and split the line on commas
                 StringBuilder sb = new StringBuilder(splitStr[2].replaceAll("\\.", "").replaceAll(",", "").toUpperCase().trim()+ ",");
-                //create a stringbuilder with the first address field to build a standardized address field since inputs are not standardized
+                //create a stringbuilder with the first address field to build a standardized address since inputs are not standardized
 
-                //iterate across remaining address fields, final block is age, ignore it.
+                //iterate across remaining address, final block is age, ignore it.
                 for (int i = 3; i <= splitStr.length-2; i++) {
                     if (i==splitStr.length-2) {
                         sb.append(" " + splitStr[i].replaceAll("\\.", "").toUpperCase().trim());
